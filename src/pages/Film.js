@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { getGenres } from "../services/GenreService";
 import { getDirectores } from "../services/DirectorService";
-import { getFilms, getFilm, createFilm } from "../services/FilmService";
+import {
+  getFilms,
+  getFilm,
+  createFilm,
+  changeStatus,
+  updateFilm,
+} from "../services/FilmService";
 
 export default function Film() {
   const [genres, setGenres] = useState([]);
@@ -24,6 +30,13 @@ export default function Film() {
     setDirector(1);
     setYear("");
     setRaiting("");
+  };
+
+  const cambiarEstado = (id) => {
+    changeStatus({ id }).then((resp) => {
+      listar();
+    });
+    console.log(id);
   };
 
   const listar = () => {
@@ -52,7 +65,7 @@ export default function Film() {
   };
 
   const update = (film) => {
-    createFilm({ film }).then((resp) => {
+    updateFilm({ film }).then((resp) => {
       console.log(resp);
       listar();
       limpiar();
@@ -61,8 +74,7 @@ export default function Film() {
 
   const save = (e) => {
     e.preventDefault();
-    if (title.trim() === "" || year.trim() === "" || raiting.trim() === "")
-      return;
+    if (title.trim() === "" || year.trim() === "") return;
     film = {
       id,
       title,
@@ -90,7 +102,7 @@ export default function Film() {
       <h3>Película</h3>
       <hr />
       <div className="row">
-        <div className="col-md-4">
+        <div className="col-md-3">
           <form onSubmit={save}>
             <label>Título:</label>
             <input
@@ -159,7 +171,7 @@ export default function Film() {
             </button>
           </form>
         </div>
-        <div className="table-responsive col-md-8">
+        <div className="table-responsive col-md-9">
           <table className="table table-hover table-striped">
             <thead className="thead-dark text-center">
               <tr>
@@ -169,6 +181,7 @@ export default function Film() {
                 <th>Director</th>
                 <th>Año</th>
                 <th>Estrellas</th>
+                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -184,11 +197,32 @@ export default function Film() {
                     {film.raiting} <span></span>⭐
                   </td>
                   <td>
+                    {film.status ? (
+                      <span className="badge badge-success">ACTIVO</span>
+                    ) : (
+                      <span className="badge badge-danger">INACTIVO</span>
+                    )}
+                  </td>
+                  <td>
+                    {film.status ? (
+                      <button
+                        onClick={() => obtenerFilm(film.id)}
+                        className="btn bg-custom-outline btn-sm"
+                      >
+                        <i className="fas fa-pen"></i>
+                      </button>
+                    ) : (
+                      ""
+                    )}
                     <button
-                      onClick={() => obtenerFilm(film.id)}
-                      className="btn bg-custom-outline btn-sm"
+                      onClick={() => cambiarEstado(film.id)}
+                      className="btn bg-custom-outline btn-sm ml-2"
                     >
-                      <i className="fas fa-pen"></i>
+                      {film.status ? (
+                        <i className="fas fa-eye-slash" title="DESACTIVAR"></i>
+                      ) : (
+                        <i className="fas fa-eye" title="ACTIVAR"></i>
+                      )}
                     </button>
                   </td>
                 </tr>

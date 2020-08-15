@@ -4,6 +4,7 @@ import {
   getActorFilm,
   createActorFilm,
   updateActorFilm,
+  changeStatus
 } from "../services/ActorFilmService";
 import { getActores } from "../services/ActorService";
 import { getFilms } from "../services/FilmService";
@@ -24,6 +25,13 @@ export default function FilmActor() {
     setActor(1);
     setFilm(1);
     setOscarWinner("");
+  };
+
+  const cambiarEstado = (id) => {
+    changeStatus({ id }).then((resp) => {
+      listar();
+    });
+    console.log(id);
   };
 
   const listar = () => {
@@ -57,7 +65,6 @@ export default function FilmActor() {
 
   const save = (e) => {
     e.preventDefault();
-    if (oscarWinner.trim() === "") return;
     actorFilm = {
       id,
       actor: { id: actor },
@@ -136,6 +143,7 @@ export default function FilmActor() {
                 <th>Actor</th>
                 <th>Película</th>
                 <th>Oscar Ganados</th>
+                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -151,11 +159,32 @@ export default function FilmActor() {
                     {actorfilm.oscarWinner} <span></span>🗽
                   </td>
                   <td>
+                    {actorfilm.status ? (
+                      <span className="badge badge-success">ACTIVO</span>
+                    ) : (
+                      <span className="badge badge-danger">INACTIVO</span>
+                    )}
+                  </td>
+                  <td>
+                    {actorfilm.status ? (
+                      <button
+                        onClick={() => obtenerActorFilm(actorfilm.id)}
+                        className="btn bg-custom-outline btn-sm"
+                      >
+                        <i className="fas fa-pen"></i>
+                      </button>
+                    ) : (
+                      ""
+                    )}
                     <button
-                      onClick={() => obtenerActorFilm(actorfilm.id)}
-                      className="btn bg-custom-outline btn-sm"
+                      onClick={() => cambiarEstado(actorfilm.id)}
+                      className="btn bg-custom-outline btn-sm ml-2"
                     >
-                      <i className="fas fa-pen"></i>
+                      {actorfilm.status ? (
+                        <i className="fas fa-eye-slash" title="DESACTIVAR"></i>
+                      ) : (
+                        <i className="fas fa-eye" title="ACTIVAR"></i>
+                      )}
                     </button>
                   </td>
                 </tr>

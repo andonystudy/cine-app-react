@@ -103,3 +103,31 @@ label{
 .c-login .card{
   width: 400px;
 }
+
+/*home*/
+.list-group-item{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #e7edff;
+}
+.list-group-item .left{
+  display: block;
+  width: 90px;
+  height: 100%;
+  text-align: center;
+  font-size: 28px;
+  letter-spacing: 5px;
+  font-weight: bold;
+}
+.list-group-item .right{
+  width: calc(100% - 90px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.list-group-item .right h6,
+.list-group-item .right p{
+  margin: 0;
+}

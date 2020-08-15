@@ -4,6 +4,7 @@ import {
   getDirector,
   createDirector,
   updateDirector,
+  changeStatus,
 } from "../services/DirectorService";
 
 export default function Director() {
@@ -17,6 +18,13 @@ export default function Director() {
     getDirectores().then((directores) => {
       setDirectores(directores);
     });
+  };
+
+  const cambiarEstado = (id) => {
+    changeStatus({ id }).then((resp) => {
+      listar();
+    });
+    console.log(id);
   };
 
   const obtenerDirector = (id) => {
@@ -102,6 +110,7 @@ export default function Director() {
               <tr>
                 <th>#</th>
                 <th>Nombre y Apellido</th>
+                <th>Estado</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -113,11 +122,32 @@ export default function Director() {
                     {director.name} {director.lastname}
                   </td>
                   <td>
+                    {director.status ? (
+                      <span className="badge badge-success">ACTIVO</span>
+                    ) : (
+                      <span className="badge badge-danger">INACTIVO</span>
+                    )}
+                  </td>
+                  <td>
+                    {director.status ? (
+                      <button
+                        onClick={() => obtenerDirector(director.id)}
+                        className="btn bg-custom-outline btn-sm"
+                      >
+                        <i className="fas fa-pen"></i>
+                      </button>
+                    ) : (
+                      ""
+                    )}
                     <button
-                      onClick={() => obtenerDirector(director.id)}
-                      className="btn bg-custom-outline btn-sm"
+                      onClick={() => cambiarEstado(director.id)}
+                      className="btn bg-custom-outline btn-sm ml-2"
                     >
-                      <i className="fas fa-pen"></i>
+                      {director.status ? (
+                        <i className="fas fa-eye-slash" title="DESACTIVAR"></i>
+                      ) : (
+                        <i className="fas fa-eye" title="ACTIVAR"></i>
+                      )}
                     </button>
                   </td>
                 </tr>

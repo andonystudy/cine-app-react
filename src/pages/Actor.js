@@ -4,6 +4,7 @@ import {
   getActores,
   createActor,
   updateActor,
+  changeStatus,
 } from "../services/ActorService";
 
 export default function Actor() {
@@ -19,6 +20,13 @@ export default function Actor() {
     getActores().then((actores) => {
       setActores(actores);
     });
+
+  const cambiarEstado = (id) => {
+    changeStatus({ id }).then((resp) => {
+      listar();
+    });
+    console.log(id);
+  };
 
   const obtenerActor = (id) =>
     getActor({ id }).then((actor) => {
@@ -99,42 +107,70 @@ export default function Actor() {
             <button type="submit" className="btn btn-block bg-custom mt-2">
               Guardar
             </button>
-            <button type="button" onClick={limpiar} className="btn btn-block bg-custom-outline mt-2">
+            <button
+              type="button"
+              onClick={limpiar}
+              className="btn btn-block bg-custom-outline mt-2"
+            >
               Cancelar
             </button>
           </form>
         </div>
         <div className="col-md-8">
-          <table className="table table-hover table-striped">
-            <thead className="thead-dark text-center">
-              <tr>
-                <th>#</th>
-                <th>Nombre y Apellido</th>
-                <th>Género</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {actores.map((actor, idx) => (
-                <tr className="text-center" key={actor.id}>
-                  <td>{idx + 1}</td>
-                  <td>
-                    {actor.name} {actor.lastname}
-                  </td>
-                  <td>{actor.sex === "m" ? "Masculino" : "Femenino"}</td>
-                  <td>
-                    <button
-                      key={actor.id}
-                      onClick={() => obtenerActor(actor.id)}
-                      className="btn bg-custom-outline btn-sm"
-                    >
-                      <i className="fas fa-pen"></i>
-                    </button>
-                  </td>
+            <table className="table table-hover table-striped">
+              <thead className="thead-dark text-center">
+                <tr>
+                  <th>#</th>
+                  <th>Nombre y Apellido</th>
+                  <th>Género</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {actores.map((actor, idx) => (
+                  <tr className="text-center" key={actor.id}>
+                    <td>{idx + 1}</td>
+                    <td>
+                      {actor.name} {actor.lastname}
+                    </td>
+                    <td>{actor.sex === "m" ? "Masculino" : "Femenino"}</td>
+                    <td>
+                      {actor.status ? (
+                        <span className="badge badge-success">ACTIVO</span>
+                      ) : (
+                        <span className="badge badge-danger">INACTIVO</span>
+                      )}
+                    </td>
+                    <td>
+                      {actor.status ? (
+                        <button
+                          onClick={() => obtenerActor(actor.id)}
+                          className="btn bg-custom-outline btn-sm"
+                        >
+                          <i className="fas fa-pen"></i>
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                      <button
+                        onClick={() => cambiarEstado(actor.id)}
+                        className="btn bg-custom-outline btn-sm ml-2"
+                      >
+                        {actor.status ? (
+                          <i
+                            className="fas fa-eye-slash"
+                            title="DESACTIVAR"
+                          ></i>
+                        ) : (
+                          <i className="fas fa-eye" title="ACTIVAR"></i>
+                        )}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
         </div>
       </div>
     </div>
