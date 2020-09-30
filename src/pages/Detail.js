@@ -1,0 +1,1 @@
+//Creando Detail.js (page)
