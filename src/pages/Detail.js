@@ -1,1 +1,1 @@
-//Creando Detail.js (page)
+//Update Detail.js (page)
